@@ -30,9 +30,11 @@ model Location {
   city          String
   state         String
   country       String
+  approvedUsers ApprovedUser[]
 }
 
-model ApprovedUsers {
+model ApprovedUser {
+  @@id([userId, locationId])
   user       User     @relation(fields: [userId], references: [id])
   userId     String 
   location   Location @relation(fields: [locationId], references: [id])
@@ -44,10 +46,15 @@ model TicketOffering {
   type                String
   quantity_max        Int
   quantity_remaining  Int
+  tickets             Ticket[]
 }
 
 model Ticket {
-
+  @@id([userId, ticketOfferingId])
+  user              User     @relation(fields: [userId], references: [id])
+  userId            String 
+  ticketOffering    TicketOffering @relation(fields: [ticketOfferingId], references: [id])
+  ticketOfferingId  String
 }
 
 // Necessary for Next auth
@@ -86,6 +93,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   events        Event[]
+  tickets       Ticket[]
+  approvedLocations ApprovedUser[]
 }
 
 model VerificationToken {
