@@ -1,12 +1,8 @@
 "use client";
 
-import { SessionProvider, useSession } from "next-auth/react";
-import Link from "next/link";
-import UserProfile from "../src/components/Header/UserProfile/UserProfile";
+import { SessionProvider } from "next-auth/react";
 import "../src/styles/globals.css";
 import { ClientProvider } from "../src/components/Providers/trpcClient";
-import Nav from "../src/components/Header/Nav/Nav";
-import Footer from "../src/components/Footer/Footer";
 import Header from "../src/components/Header/Header";
 
 export default function DefaultLayout({
@@ -37,11 +33,6 @@ export default function DefaultLayout({
           </SessionProvider>
         </ClientProvider>
       </body>
-      <script
-        async
-        defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk49xDNAbdjqpRLGP_ejtUpBIyNItdIzg&libraries=places&callback=initMap"
-      ></script>
     </html>
   );
 }
