@@ -4,7 +4,7 @@ import SpotifyProvider from "next-auth/providers/spotify";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db/client";
+import { db } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -12,18 +12,19 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.role = user.role; // Add role value to user object so it is passed along with session
       }
       return session;
     },
   },
   // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
-  debug: process.env.NODE_ENV === 'development',
+  adapter: PrismaAdapter(db),
+  debug: process.env.NODE_ENV === "development",
   providers: [
     SpotifyProvider({
       clientId: env.SPOTIFY_CLIENT_ID,
-      clientSecret: env.SPOTIFY_CLIENT_SECRET
-    })
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
+    }),
     // ...add more providers here
   ],
 };

@@ -1,16 +1,15 @@
 "use client";
 
-import { Event, User } from "@prisma/client";
 import Link from "next/link";
 import TimeAgo from "react-timeago";
+import type { ClientType } from "../../server/db/frontend-type";
+import type { EventWithUser } from "../../server/db/types";
 
-type EventWithUser = Omit<Event, "createdAt" | "updatedAt"> & {
-  organizer: User;
-  createdAt: number;
-  updatedAt: number;
-};
-
-const EventListItem = ({ event }: { event: EventWithUser }) => {
+export const EventListItem = ({
+  event,
+}: {
+  event: ClientType<EventWithUser>;
+}) => {
   return (
     <Link
       href={`/event/${event.id}`}
@@ -27,16 +26,5 @@ const EventListItem = ({ event }: { event: EventWithUser }) => {
         <span>{event.organizer.email}</span>
       </div>
     </Link>
-  );
-};
-
-export const EventList = ({ events }: { events: EventWithUser[] }) => {
-  return (
-    <div>
-      <h2>Upcoming Events</h2>
-      {events.map((e) => (
-        <EventListItem event={e} key={e.id} />
-      ))}
-    </div>
   );
 };

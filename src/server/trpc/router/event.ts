@@ -1,13 +1,26 @@
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
-
-import { prisma } from "../../db/client";
+import { router, protectedProcedure } from "../trpc";
+import { db } from "../../db/client";
 
 export const eventRouter = router({
-  createEvent: protectedProcedure
-    .input(z.object({ organizerId: z.string(), title: z.string() }))
-    .mutation(async ({ input }) => {
-      const event = await prisma.event.create({ data: input });
-      return event;
+  upsertEvent: protectedProcedure
+    .input(
+      z.object({
+        event: z.object({
+          id: z.string().optional(),
+          title: z.string(),
+        }),
+        artists: z.array(
+          z.object({
+            id: z.string().optional(),
+            name: z.string(),
+            link: z.string(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input: { event, artists }, ctx }) => {
+      // Create Event.
+      console.log(db, event, artists, ctx);
     }),
 });
