@@ -122,7 +122,22 @@ export const stripeRouter = router({
         sessionId: z.string(),
       })
     )
-    .query(async ({ input }) => {
-      return await getSession(input.sessionId);
+    .query(async ({ input: { sessionId }, ctx: { prisma: db } }) => {
+      return {
+        session: await getSession(sessionId),
+        event: await db.event.findFirst({
+          where: {
+            ticketOfferings: {
+              some: {
+                tickets: {
+                  some: {
+                    stripeSessionId: sessionId,
+                  },
+                },
+              },
+            },
+          },
+        }),
+      };
     }),
 });

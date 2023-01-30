@@ -9,9 +9,6 @@ export default function UserProfile() {
     return (
       <div className="text-right">
         <a>{sessionData.user?.name}</a>
-        <div>
-          Creating events for <b></b>:<a>Switch Venues</a>
-        </div>
       </div>
     );
   }

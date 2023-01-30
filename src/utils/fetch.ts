@@ -1,5 +1,5 @@
-export default async function fetchWrapper(url: string){
-    const res = await fetch(url);
+export default async function fetchWrapper(url: string) {
+  const res = await fetch(url);
 
   // Recommendation: handle errors
   if (!res.ok) {

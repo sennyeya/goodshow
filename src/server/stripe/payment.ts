@@ -17,7 +17,7 @@ export async function createCheckoutSession(
     (e) => ({
       price_data: {
         currency: "USD",
-        unit_amount: e.ticketOffering.price.toNumber() * 100,
+        unit_amount: e.ticketOffering.price * 100,
         product_data: {
           name: e.ticketOffering.type,
         },

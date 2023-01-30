@@ -7,5 +7,5 @@ export default async function EventDetailPage({
   params: { id: string };
 }) {
   const event = await getEvent(params.id);
-  return <EditEvent event={event} />;
+  return <EditEvent event={event} data-superjson />;
 }

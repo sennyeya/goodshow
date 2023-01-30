@@ -13,6 +13,12 @@ datasource db {
 model Event {
   id          String   @id @default(cuid())
   title       String
+  description String
+  rules       String
+  ageRestriction  String
+  doorsTime   DateTime
+  startTime   DateTime
+  
   locationId  String
   location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   organizerId String
@@ -34,6 +40,7 @@ model Artist {
 model Location {
   id            String         @id @default(cuid())
   name          String
+  link          String
   address       String
   zip           String
   city          String
@@ -63,7 +70,7 @@ model TicketOffering {
   type               String
   quantity_max       Int
   quantity_remaining Int
-  price              Decimal
+  price              Float
   eventId            String
   event              Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   tickets            Ticket[]

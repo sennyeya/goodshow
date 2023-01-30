@@ -4,17 +4,13 @@ import { useState } from "react";
 import Counter from "../Counter/Counter";
 import { trpc } from "../../utils/trpc";
 import type { TicketOffering } from "@prisma/client";
+import { toCurrency } from "../../utils/currency";
 
 type CheckoutProps = {
   perTicketCost: number;
   perTicketFee: number;
   ticketOffering: TicketOffering;
 };
-
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
 export default function Checkout({
   perTicketCost,
@@ -30,9 +26,7 @@ export default function Checkout({
     ticketOfferingId: ticketOffering.id,
   });
   const checkout = trpc.stripe.checkout.useMutation();
-  const toCurrency = (value: number) => {
-    return formatter.format(value);
-  };
+
   const redirectToCheckoutUrl = () => {
     return checkout.mutate(
       {
@@ -40,7 +34,6 @@ export default function Checkout({
       },
       {
         onSuccess(data) {
-          console.log(data);
           if (data && data.url) {
             document.location.href = data.url;
           } else {
