@@ -1,3 +1,5 @@
-export default function PurchaseIndex() {
-  return <></>;
+import { notFound } from "next/navigation";
+
+export default function PurchasePage() {
+  notFound();
 }

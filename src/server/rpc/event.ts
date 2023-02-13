@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { db } from "../../../src/server/db/client";
 
 export async function getEvent(id: string) {
@@ -11,6 +12,6 @@ export async function getEvent(id: string) {
     },
   });
   console.log(event?.ticketOfferings);
-  if (!event) throw new Error("Not found.");
+  if (!event) notFound();
   return event;
 }

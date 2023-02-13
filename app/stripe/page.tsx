@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
 
-export default function EventPage() {
+export default function StripePage() {
   notFound();
 }

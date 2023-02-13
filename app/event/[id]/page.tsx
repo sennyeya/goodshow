@@ -57,22 +57,30 @@ export default async function EventDetailPage({
             <h1 className="mb-2 text-6xl font-thin">{event.title}</h1>
           )}
           <h1 className="mb-2 text-5xl font-semibold">
-            {event.artists.map((artist) => (
-              <a href={artist.link} key={artist.id} className="underline">
-                {artist.name}
-              </a>
-            ))}
+            <a
+              href={event.artists[0]?.link}
+              key={event.artists[0]?.id}
+              className="underline"
+            >
+              {event.artists[0]?.name}
+            </a>
           </h1>
           <h2 className="mb-1 text-3xl font-normal">
-            w/{" "}
-            <a href="" className="underline">
-              The Strokes
-            </a>{" "}
-            &{" "}
-            <a href="" className="underline">
-              LCD Soundsystem
-            </a>
+            {event.artists
+              .filter((_, i) => i > 0)
+              .map((artist, index) => {
+                return (
+                  <div key={artist.id}>
+                    {index === 0 ? `w/ ` : ""}
+                    <a href={artist.link} className="underline">
+                      {artist.name}
+                    </a>
+                    {index !== 0 ? ` & ` : ""}
+                  </div>
+                );
+              })}
           </h2>
+
           <h2 className="text-lg font-light">
             at{" "}
             <a href={event.location.link} className="underline">

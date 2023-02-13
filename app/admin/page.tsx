@@ -1,5 +1,5 @@
-"use client";
+import { notFound } from "next/navigation";
 
-export default function AdminHomepage() {
-  return <></>;
+export default function AdminPage() {
+  notFound();
 }
