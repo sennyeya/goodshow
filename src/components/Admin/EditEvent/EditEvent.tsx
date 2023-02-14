@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -103,9 +102,7 @@ export default function EditEvent({
     register,
     handleSubmit,
     control,
-    formState: { errors },
-    watch,
-    setValue,
+    // formState: { errors },
   } = useForm<{ event: Event; artists: Artist[] }>({
     defaultValues: {
       event: {
@@ -128,7 +125,9 @@ export default function EditEvent({
           quantity: event?.ticketOfferings?.[0]?.quantity_max,
         },
         restrictions: {
-          age: event?.ageRestriction,
+          age:
+            (event?.ageRestriction as Event["restrictions"]["age"]) ??
+            ALL_AGES_OPTION,
           rules: event?.rules,
         },
         ...event,
@@ -139,7 +138,11 @@ export default function EditEvent({
       ],
     },
   });
-  const artists = watch("artists");
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "artists",
+  });
+
   const onSubmit = ({
     event,
     artists,
@@ -187,17 +190,15 @@ export default function EditEvent({
             <h1 className={`${FORM_SECTION_LABEL_CLASS}`}>Artists</h1>
           </div>
           <div className="basis-9/12">
-            {artists.map((artist, index) => {
+            {fields.map((artist, index) => {
               return (
-                <div key={artist.name}>
+                <div key={artist.id || artist.name}>
                   {index !== 0 && (
                     <button
                       type="button"
                       onClick={() => {
-                        setValue(
-                          "artists",
-                          artists.filter((_, i) => i !== index)
-                        );
+                        console.log(index);
+                        remove(index);
                       }}
                     >
                       Remove this artist. {index}
@@ -220,18 +221,13 @@ export default function EditEvent({
                     />
                   </div>
 
-                  {index !== artists.length - 1 && <hr className="my-4" />}
+                  {index !== fields.length - 1 && <hr className="my-4" />}
                 </div>
               );
             })}
             <button
               type="button"
-              onClick={() =>
-                setValue(
-                  "artists",
-                  artists.concat({ id: "", link: "", name: "" })
-                )
-              }
+              onClick={() => append({ id: "", link: "", name: "" })}
             >
               Add more artists
             </button>
@@ -364,7 +360,8 @@ export default function EditEvent({
                   <Select
                     {...field}
                     options={AGE_OPTIONS}
-                    value={ALL_AGES_OPTION}
+                    value={AGE_OPTIONS.find((e) => e.value === field.value)}
+                    onChange={(e) => field.onChange(e?.value)}
                   />
                 )}
               />
@@ -390,7 +387,7 @@ export default function EditEvent({
               <label className={`${FORM_ITEM_LABEL_CLASS}`}>
                 Visible to Public
               </label>
-              <Select options={VISIBILITY_OPTIONS} value={PRIVATE_VISIBILITY} />
+              <Select options={VISIBILITY_OPTIONS} />
             </div>
             <div className={`${FORM_ITEM_CLASS}`}>
               <label className={`${FORM_ITEM_LABEL_CLASS}`}>

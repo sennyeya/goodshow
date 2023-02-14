@@ -68,14 +68,14 @@ export default async function EventDetailPage({
           <h2 className="mb-1 text-3xl font-normal">
             {event.artists
               .filter((_, i) => i > 0)
-              .map((artist, index) => {
+              .map((artist, index, arr) => {
                 return (
                   <div key={artist.id}>
                     {index === 0 ? `w/ ` : ""}
                     <a href={artist.link} className="underline">
                       {artist.name}
                     </a>
-                    {index !== 0 ? ` & ` : ""}
+                    {index < arr.length - 1 ? ` & ` : ""}
                   </div>
                 );
               })}

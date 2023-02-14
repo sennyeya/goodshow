@@ -39,6 +39,7 @@ export const eventRouter = router({
         artists: z
           .array(
             z.object({
+              id: z.string().optional(),
               name: z.string().min(1),
               link: z.string().min(1),
             })
@@ -160,8 +161,29 @@ export const eventRouter = router({
                   },
                 },
                 artists: {
-                  create: artists,
+                  connectOrCreate: artists.map((artist) => ({
+                    where: {
+                      id: artist.id,
+                    },
+                    create: artist,
+                  })),
                 },
+              },
+            }),
+            db.artist.deleteMany({
+              where: {
+                AND: [
+                  {
+                    eventId: event.id,
+                  },
+                  {
+                    id: {
+                      notIn: artists
+                        .map((e) => e.id)
+                        .filter((e): e is string => Boolean(e)),
+                    },
+                  },
+                ],
               },
             }),
           ]);
